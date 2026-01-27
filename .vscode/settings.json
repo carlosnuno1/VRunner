@@ -67,5 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "CMPM-171-Vertical-Slice.slnx"
+    "dotnet.defaultSolution": "CMPM-171-Vertical-Slice.slnx",
+    "editor.inlineSuggest.enabled": false
 }
