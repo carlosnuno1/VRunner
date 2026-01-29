@@ -15,7 +15,7 @@ public class Grapple : MonoBehaviour
     private float maxSwingDistance = 25f;
     private Vector3 swingPoint;
     private SpringJoint joint;
-    public InputActionProperty grappleTrigger;
+    public InputActionReference grappleTrigger;
     private void StartSwing()
     {
         RaycastHit hit;
@@ -48,13 +48,16 @@ public class Grapple : MonoBehaviour
 
     void Update()
     {
-        if (grappleTrigger) StartSwing();
+        if (grappleTrigger) {
+            StartSwing();
+            Debug.Log("bruh");
+        }
         if (grappleTrigger) StopSwing();
     }
 
     void LateUpdate()
     {
-        DrawRope();
+        DrawRope();   
     }
 
     void DrawRope()
