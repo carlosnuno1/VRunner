@@ -1,48 +1,67 @@
 using UnityEngine;
 
-public class ShockwaveBehavior : MonoBehaviour
+public class ShockwaveGrenade : MonoBehaviour
 {
-    public float delay = 2f;
-    public float radius = 8f;
-    public float explosionForce = 1500f; // High force for enemies
-    public float playerLaunchPower = 20f; // Snappy jump for player
-    public float upwardsModifier = 1.5f; // Makes things go "Up and Out"
+    public float fuseDelay = 2.5f;
+    public float blastRadius = 8f;
+    public float launchPower = 25f;
+    public GameObject explosionEffectPrefab;
+
+    private Rigidbody rb;
+    private bool hasStuck = false;
 
     void Start()
     {
-        // Start the fuse immediately
-        Invoke("Explode", delay);
+        rb = GetComponent<Rigidbody>();
+        // Gravity stays ON so it arcs naturally
+        rb.useGravity = true;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // If we hit the Player or another Grenade, don't stick (Physics Layer fix below is better though)
+        if (collision.gameObject.CompareTag("Player")) return;
+
+        if (!hasStuck)
+        {
+            hasStuck = true;
+
+            // Stop all movement and lock it to the ground
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+
+            GetComponent<Renderer>().material.color = Color.red;
+            Invoke(nameof(Explode), fuseDelay);
+        }
     }
 
     void Explode()
     {
-        // Find everything in the blast zone
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-
-        foreach (Collider hit in colliders)
+        if (explosionEffectPrefab != null)
         {
-            Rigidbody rb = hit.GetComponent<Rigidbody>();
-            if (rb == null) continue;
+            GameObject fx = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
+            Destroy(fx, 1f);
+        }
+
+        Collider[] victims = Physics.OverlapSphere(transform.position, blastRadius);
+        foreach (Collider hit in victims)
+        {
+            Rigidbody victimRb = hit.GetComponent<Rigidbody>();
+            if (victimRb == null) continue;
+
+            Vector3 dir = (hit.transform.position - transform.position).normalized;
+            dir.y += 0.5f;
 
             if (hit.CompareTag("Player"))
             {
-                // Fortnite style: Calculate direction from grenade to player
-                Vector3 launchDir = (hit.transform.position - transform.position).normalized;
-
-                // Add an upward boost so it's a "jump" and not just a slide
-                launchDir.y += 0.5f;
-
-                // Override velocity for that instant "pop" feel
-                rb.linearVelocity = launchDir * playerLaunchPower;
+                victimRb.linearVelocity = dir * launchPower;
             }
             else
             {
-                // Normal explosion physics for enemies/props
-                rb.AddExplosionForce(explosionForce, transform.position, radius, upwardsModifier);
+                victimRb.AddExplosionForce(1500f, transform.position, blastRadius, 1.5f);
             }
         }
-
-        // TODO: Instantiate an explosion particle effect here later
         Destroy(gameObject);
     }
 }
