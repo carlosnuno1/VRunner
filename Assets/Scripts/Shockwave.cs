@@ -6,15 +6,23 @@ public class ShockwaveGrenade : MonoBehaviour
     public float blastRadius = 8f;
     public float launchPower = 25f;
     public GameObject explosionEffectPrefab;
+    private bool thrown;
 
     private Rigidbody rb;
     private bool hasStuck = false;
+    private Vector3 upAngle;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         // Gravity stays ON so it arcs naturally
         rb.useGravity = true;
+        upAngle = new Vector3(0, 8, 0);
+    }
+
+    public void Thrown()
+    {
+        thrown = true;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -22,7 +30,7 @@ public class ShockwaveGrenade : MonoBehaviour
         // If we hit the Player or another Grenade, don't stick (Physics Layer fix below is better though)
         if (collision.gameObject.CompareTag("Player")) return;
 
-        if (!hasStuck)
+        if (!hasStuck && thrown)
         {
             hasStuck = true;
 
@@ -30,7 +38,7 @@ public class ShockwaveGrenade : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
-
+            
             GetComponent<Renderer>().material.color = Color.red;
             Invoke(nameof(Explode), fuseDelay);
         }
@@ -55,12 +63,12 @@ public class ShockwaveGrenade : MonoBehaviour
 
             if (hit.CompareTag("Player"))
             {
-                victimRb.linearVelocity = dir * launchPower;
+                victimRb.linearVelocity = (dir + upAngle) * launchPower;
+                Debug.Log("dir = " + dir);
+                Debug.Log("launchpower = " + launchPower);
+                Debug.Log("dir * launchpower = " + dir * launchPower);
             }
-            else
-            {
-                victimRb.AddExplosionForce(1500f, transform.position, blastRadius, 1.5f);
-            }
+
         }
         Destroy(gameObject);
     }
