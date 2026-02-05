@@ -44,7 +44,8 @@ public class Pistol : Gun
         {
             reloadButtonValue = leftReloadButton.action.ReadValue<float>();
             Debug.Log("ReloadButton value: " + reloadButtonValue);
-        } else if (grabbingObject.CompareTag("Right Hand"))
+        } 
+        else if (grabbingObject.CompareTag("Right Hand"))
         {
             reloadButtonValue = rightReloadButton.action.ReadValue<float>();
             Debug.Log("ReloadButton value: " + reloadButtonValue);
@@ -61,16 +62,45 @@ public class Pistol : Gun
     public override void Shoot()
     {
         RaycastHit hit;
-
+        AddEffect();
         if(Physics.Raycast(gunTipTransform.position, gunTipTransform.forward, out hit, gunData.shootingRange, gunData.targetLayerMask))
         {
-            AddEffect();
             Debug.Log(gunData.gunName + " hit " + hit.collider.name);
         }
     }
 
     private void AddEffect()
     {
+        var interactor = grab.firstInteractorSelecting;
+        if (interactor == null)
+        {
+            Debug.Log("interactor null");
+            return;
+        }
+        
+        var interactorComp = interactor as Component;
+        if (interactorComp == null)
+        {
+            Debug.Log("interactor as component null");
+            return;
+        }
+
+        GameObject grabbingObject = interactorComp.gameObject;
+
+        Transform attachPoint = grabbingObject.transform.Find("AttachPoint");
+        if (attachPoint != null)
+        {
+            Rigidbody recoilPointrb = attachPoint.GetComponent<Rigidbody>();
+            Debug.Log("adding recoil force");
+            recoilPointrb.AddForce(-transform.forward * 7, ForceMode.Impulse);
+            recoilPointrb.transform.localRotation = Quaternion.AngleAxis(-10 * 7, Vector3.right);
+        } 
+        else 
+        {
+            Debug.Log("attachpoint of child not found");
+            return;
+        }
+
         
     }
 
