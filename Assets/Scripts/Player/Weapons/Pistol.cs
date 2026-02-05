@@ -2,21 +2,21 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using UnityEngine.XR.Interaction.Toolkit;
+
 using UnityEngine.InputSystem;
 
 public class Pistol : Gun  
 {
-    public InputActionReference fireButton;
-    public InputActionReference reloadButton;
+    public InputActionReference leftReloadButton;
+    public InputActionReference rightReloadButton;
     private float triggerValue;
     private float reloadButtonValue;
-    // public InputActionReference reloadButton;
+    public UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grab;
 
     private void Awake()
     {
-        fireButton.action.Enable();
-        reloadButton.action.Enable();
+        leftReloadButton.action.Enable();
+        rightReloadButton.action.Enable();
         InputSystem.onDeviceChange += OnDeviceChange;
         InputSystem.onDeviceChange += OnDeviceChange;
     }
@@ -30,20 +30,30 @@ public class Pistol : Gun
 
     private void HandleInput()
     {
-        float triggerValue = fireButton.action.ReadValue<float>();
-        Debug.Log("Trigger value: " + triggerValue);
+        var interactor = grab.firstInteractorSelecting;
+        if (interactor == null) return;
+        
+        var interactorComp = interactor as Component;
+        if (interactorComp == null) return;
 
-        if (triggerValue > 0)
+        GameObject grabbingObject = interactorComp.gameObject;
+
+        if (grabbingObject == null) return;
+
+        if (grabbingObject.CompareTag("Left Hand"))
         {
-            TryShoot();
+            reloadButtonValue = leftReloadButton.action.ReadValue<float>();
+            Debug.Log("ReloadButton value: " + reloadButtonValue);
+        } else if (grabbingObject.CompareTag("Right Hand"))
+        {
+            reloadButtonValue = rightReloadButton.action.ReadValue<float>();
+            Debug.Log("ReloadButton value: " + reloadButtonValue);
         }
 
-        reloadButtonValue = reloadButton.action.ReadValue<float>();
-        Debug.Log("ReloadButton value: " + reloadButtonValue);
-
-        if (reloadButtonValue > 0)
+        if (reloadButtonValue > 0 && grab.isSelected)
         {
             TryReload();
+            Debug.Log(grab.firstInteractorSelecting);
         }
     }
 
@@ -54,8 +64,14 @@ public class Pistol : Gun
 
         if(Physics.Raycast(gunTipTransform.position, gunTipTransform.forward, out hit, gunData.shootingRange, gunData.targetLayerMask))
         {
+            AddEffect();
             Debug.Log(gunData.gunName + " hit " + hit.collider.name);
         }
+    }
+
+    private void AddEffect()
+    {
+        
     }
 
     private void OnDeviceChange(InputDevice device, InputDeviceChange change)
@@ -63,12 +79,12 @@ public class Pistol : Gun
         switch (change)
         {
             case InputDeviceChange.Disconnected:
-                reloadButton.action.Disable();
-                fireButton.action.Disable();
+                leftReloadButton.action.Disable();
+                rightReloadButton.action.Disable();
                 break;
             case InputDeviceChange Reconnected:
-                fireButton.action.Enable();
-                reloadButton.action.Enable();
+                leftReloadButton.action.Enable();
+                rightReloadButton.action.Enable();
                 break;
         }
     }

@@ -131,6 +131,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Left Reload",
+                    "type": "Button",
+                    "id": "7b90c023-7e3e-49b8-8ab0-790dfae879dd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Right Reload",
+                    "type": "Button",
+                    "id": "07979d50-7a71-43b5-9517-1f6f67f0f986",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -571,6 +589,28 @@
                     "processors": "",
                     "groups": ";XR",
                     "action": "Left Grip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bcf9f253-b234-49d2-ad45-a5bf8968a576",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a7e4aef7-7b6e-4080-bc25-601cd6ee04dd",
+                    "path": "<XRController>{RightHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Right Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
