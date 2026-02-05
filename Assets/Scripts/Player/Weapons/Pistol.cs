@@ -9,6 +9,7 @@ public class Pistol : Gun
 {
     public InputActionReference leftReloadButton;
     public InputActionReference rightReloadButton;
+    public float recoilForce = 7;
     private float triggerValue;
     private float reloadButtonValue;
     public UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grab;
@@ -92,8 +93,8 @@ public class Pistol : Gun
         {
             Rigidbody recoilPointrb = attachPoint.GetComponent<Rigidbody>();
             Debug.Log("adding recoil force");
-            recoilPointrb.AddForce(-transform.forward * 7, ForceMode.Impulse);
-            recoilPointrb.transform.localRotation = Quaternion.AngleAxis(-10 * 7, Vector3.right);
+            recoilPointrb.AddForce(-transform.forward * recoilForce, ForceMode.Impulse);
+            recoilPointrb.transform.localRotation = Quaternion.AngleAxis(-10 * recoilForce, Vector3.right);
         } 
         else 
         {
