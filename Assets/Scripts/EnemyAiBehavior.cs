@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.XR;
 
 public class EnemyAIBehavior : MonoBehaviour
 {
@@ -68,6 +69,8 @@ public class EnemyAIBehavior : MonoBehaviour
     private NavMeshAgent agent;
     private bool isChasing = false;
     private int whatWaypointIsBroTravelingTo = 0;
+    private float buffer = 2f;
+    private float bulletSpeed = 400f;
 
     void Start()
     {
@@ -278,14 +281,82 @@ public class EnemyAIBehavior : MonoBehaviour
         }
     }
 
-    void updateShootingState()
+    void updateShootingState(float distanceToPlayer)
     {
-        // blah blah blah
+        if (distanceToPlayer > detectionRadius + buffer)
+        {
+            changeState(EnemyState.Patrol);
+            return;
+        }
+
+        if (distanceToPlayer > shootingDistance + buffer)
+        {
+            changeState(EnemyState.Chase);
+            return;
+        }
+
+        agent.isStopped = true;
+        // Need to add that shoot rotation
+
+        shotTimer -= Time.deltaTime;
+
+        if (shotTimer <= 0f)
+        {
+            Shoot();
+            shotTimer = timeBetweenShots;
+            shotsFired++;
+
+            if (shotsFired >= shotCount)
+            {
+                // shotsFired = 0;
+                changeState(EnemyState.Teleport);
+            }
+        }
     }
 
     void updateTeleportState()
     {
         // blah
     }
+
+    void changeState()
+    {
+        // blah
+    }
+
+    void Shoot()
+    {
+        if (pewpewPrefab == null)
+        {
+            Debug.LogError("Pewpew prefab is not assigned");
+            return;
+        }
+
+        if (firePoint == null)
+        {
+            Debug.LogError("FirePoint is not assigned");
+            return;
+        }
+
+        GameObject bullet = Instantiate(pewpewPrefab, firePoint.position, firePoint.rotation);
+        Vector3 directionToPlayer = (player.position - firePoint.position).normalized;
+        bullet.transform.forward = directionToPlayer;
+
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        bullet.transform.forward = directionToPlayer;
+
+        Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+        if (rbBullet != null)
+        {
+            rbBullet.AddForce(directionToPlayer * bulletSpeed);
+        }
+        Debug.Log("Its shooting");
+    }
+
+    void rotateTowardsPlayer()
+    {
+
+    }
+
 
 }
