@@ -261,6 +261,7 @@ public class EnemyAIBehavior : MonoBehaviour
 
         agent.isStopped = true;
         rotateTowardsPlayer();
+        PointFireAtPlayer();
 
         shotTimer -= Time.deltaTime;
 
@@ -418,5 +419,18 @@ public class EnemyAIBehavior : MonoBehaviour
         }
 
         return Vector3.zero;
+    }
+
+    // reffing the shooterPoint
+    void PointFireAtPlayer()
+    {
+        if (firePoint == null || player == null) return;
+
+        Vector3 direction = (player.position - firePoint.position).normalized;
+        
+        if (direction == Vector3.forward)
+        {
+            firePoint.rotation = Quaternion.LookRotation(direction);
+        }
     }
 }
