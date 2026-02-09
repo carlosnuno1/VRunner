@@ -56,11 +56,14 @@ public class EnemyAIBehavior : MonoBehaviour
     private float shootCooldown = 1f;
     private float timeBetweenShots = 1f;
     private int shotCount;
+    private float shootingDistance = 8f;
 
     [Header("Teleport")]
+    private GameObject teleportVFX;
     private float teleportWithinPlayerRadius = 5f;
     private float minTeleportDistanceFromPlayer = 2f;
     private float teleportCooldown = 5f;
+    public float teleportDuration = 1f;
 
     private EnemyState currentState = EnemyState.Patrol;
     private int shotsFired = 0;
@@ -234,7 +237,8 @@ public class EnemyAIBehavior : MonoBehaviour
         if (agent.isActiveAndEnabled && player != null)
         {
             agent.SetDestination(player.position);
-            Debug.Log($"Set designination to player: {player.position}");
+            agent.stoppingDistance = playerReachingPoint;
+            Debug.Log($"Player position: {player.position}");
         }
     }
     void stopChasing()
@@ -269,16 +273,21 @@ public class EnemyAIBehavior : MonoBehaviour
         }
     }
 
-    void updateChaseState()
+    void updateChaseState(float distanceToPlayer)
     {
-        if (distanceToPlayer > detectionRadius)
+        if (distanceToPlayer > detectionRadius * buffer)
         {
             changeState(EnemyState.Patrol);
+            return;
         }
-        else
+
+        if (distanceToPlayer <= shootingDistance)
         {
-            chasingPlayer();
+            changeState(EnemyState.Shoot);
+            return;
         }
+
+        chasingPlayer();
     }
 
     void updateShootingState(float distanceToPlayer)
@@ -316,15 +325,49 @@ public class EnemyAIBehavior : MonoBehaviour
 
     void updateTeleportState()
     {
-        // blah
+        if(teleportTimer <= 0f)
+        {
+            Teleport();
+            shotsFired = 0;
+            changeState(EnemyState.Teleport);
+        }
     }
 
-    void changeState()
+    void changeState(EnemyState newState)
     {
-        // blah
+        switch (currentState)
+        {
+            case EnemyState.Shoot:
+                agent.isStopped = false;
+                shotsFired = 0;
+                break;
+        }
+
+        switch (newState)
+        {
+            case EnemyState.Patrol:
+                agent.speed = patrolSpeed;
+                agent.stoppingDistance = waypointReachingPoint;
+                agent.isStopped = false;
+                moveTowardsNextWaypoint();
+                break;
+            case EnemyState.Chase:
+                agent.speed = chaseSpeed;
+                agent.stoppingDistance = playerReachingPoint;
+                agent.isStopped = false;
+                break;
+            case EnemyState.Shoot:
+                agent.isStopped = true;
+                shotTimer = 0f;
+                break;
+            case EnemyState.Teleport:
+                agent.isStopped = true;
+                teleportTimer = teleportDuration;
+                break;
+        }
     }
 
-    void Shoot()
+        void Shoot()
     {
         if (pewpewPrefab == null)
         {
@@ -355,8 +398,66 @@ public class EnemyAIBehavior : MonoBehaviour
 
     void rotateTowardsPlayer()
     {
+        Vector3 direction = (player.position - transform.position).normalized;
+        //direction.y = 0;
+        if (direction != Vector3.zero) {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * buffer);
+        }
+    }
 
+    void Teleport()
+    {
+        Vector3 newPosition = FindTeleportPosition();
+        if (newPosition == Vector3.zero)
+        {
+            Debug.Log("Couldn't find teleportation spot around player");
+            return;
+        }
+
+        if (teleportVFX != null)
+        {
+            Instantiate(teleportVFX, transform.position, Quaternion.identity);
+        }
+
+        agent.enabled = false;
+        transform.position = newPosition;
+        agent.enabled = true;
+
+        if(teleportVFX != null)
+        {
+            Instantiate(teleportVFX, transform.position, Quaternion.identity);
+        }
+
+        rotateTowardsPlayer();
+
+        teleportTimer = Time.time;
+        Debug.Log("Enemy teleported to:" + newPosition);
     }
 
 
+    Vector3 FindTeleportPosition()
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            Vector2 randomCircle = Random.insideUnitCircle.normalized * teleportWithinPlayerRadius;
+            Vector3 targetPos = player.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+
+            if (Vector3.Distance(targetPos, player.position) < minTeleportDistanceFromPlayer)
+                continue;
+
+            if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, buffer, NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+        }
+
+        Vector3 behindPlayer = player.position - player.forward * minTeleportDistanceFromPlayer;
+        if (NavMesh.SamplePosition(behindPlayer, out NavMeshHit fallbackHit, 2f, NavMesh.AllAreas))
+        {
+            return fallbackHit.position;
+        }
+
+        return Vector3.zero;
+    }
 }
