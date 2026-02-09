@@ -1,7 +1,5 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.XR;
 
 public class EnemyAIBehavior : MonoBehaviour
 {
@@ -51,18 +49,19 @@ public class EnemyAIBehavior : MonoBehaviour
     public float waypointReachingPoint = 0.5f;
 
     [Header("Shooting")]
-    private GameObject pewpewPrefab;
-    private Transform firePoint;
-    private float shootCooldown = 1f;
-    private float timeBetweenShots = 1f;
-    private int shotCount;
-    private float shootingDistance = 8f;
+    public GameObject pewpewPrefab;
+    public Transform firePoint;
+    public float shootCooldown = 1f;
+    public float timeBetweenShots = 1f;
+    public int shotCount = 3;
+    public float shootingDistance = 8f;
+    public float bulletForce = 400f;
 
     [Header("Teleport")]
-    private GameObject teleportVFX;
-    private float teleportWithinPlayerRadius = 5f;
-    private float minTeleportDistanceFromPlayer = 2f;
-    private float teleportCooldown = 5f;
+    public GameObject teleportVFX;
+    public float teleportWithinPlayerRadius = 5f;
+    public float minTeleportDistanceFromPlayer = 2f;
+    public float teleportCooldown = 5f;
     public float teleportDuration = 1f;
 
     private EnemyState currentState = EnemyState.Patrol;
@@ -73,7 +72,6 @@ public class EnemyAIBehavior : MonoBehaviour
     private bool isChasing = false;
     private int whatWaypointIsBroTravelingTo = 0;
     private float buffer = 2f;
-    private float bulletSpeed = 400f;
 
     void Start()
     {
@@ -99,17 +97,9 @@ public class EnemyAIBehavior : MonoBehaviour
             return;
         }
 
-        agent.speed = patrolSpeed;
-        agent.stoppingDistance = waypointReachingPoint;
-        if (waypoints.Length > 0)
-        {
-            moveTowardsNextWaypoint();
-            return;
-        }
-
         if (firePoint == null)
         {
-            firePoint = transform.Find("FirePoint");
+            firePoint = transform.Find("Firepoint");
             if (firePoint == null)
             {
                 GameObject firePointObj = new GameObject("FirePoint");
@@ -118,6 +108,14 @@ public class EnemyAIBehavior : MonoBehaviour
                 firePoint.localPosition = new Vector3(0, 1, 0);
                 Debug.Log("Dale Fireball created");
             }
+        }
+
+        agent.speed = patrolSpeed;
+        agent.stoppingDistance = waypointReachingPoint;
+        if (waypoints.Length > 0)
+        {
+            moveTowardsNextWaypoint();
+            return;
         }
     }
 
@@ -147,53 +145,6 @@ public class EnemyAIBehavior : MonoBehaviour
                 updateTeleportState();
                 break;
         }
-
-
-        /*
-        switch (currentState)
-        {
-            case EnemyState.Patrol:
-                if (canSeeThePlayer())
-                {
-                    startChasing();
-                }
-                else
-                {
-                    patrolBetweenWaypoints();
-                }
-                break;
-        }
-        */
-
-        /*
-        if (isChasing && distanceToPlayer < playerReachingPoint)
-        {
-            moveTowardsNextWaypoint();
-        }
-
-        if (canSeeThePlayer())
-        {
-            if (!isChasing)
-            {
-                startChasing();
-            }
-            else
-            {
-                chasingPlayer();
-            }
-        }
-        else
-        {
-            if (isChasing)
-            {
-                stopChasing();
-            }
-            else
-            {
-                patrolBetweenWaypoints();
-            }
-        }
-        */
     }
 
     void moveTowardsNextWaypoint()
@@ -255,13 +206,17 @@ public class EnemyAIBehavior : MonoBehaviour
 
     void patrolBetweenWaypoints()
     {
-        if (waypoints.Length > 0 && agent != null && agent.isActiveAndEnabled)
+        if (waypoints.Length == 0) return;
+
+        if (agent.remainingDistance <= waypointReachingPoint && !agent.pathPending)
         {
-            agent.SetDestination(waypoints[whatWaypointIsBroTravelingTo].position);
+            whatWaypointIsBroTravelingTo = (whatWaypointIsBroTravelingTo + 1) % waypoints.Length;
+            moveTowardsNextWaypoint();
         }
+
     }
 
-    void updatePatrolState(float distanceToPlayer)
+        void updatePatrolState(float distanceToPlayer)
     {
         if (distanceToPlayer <= detectionRadius && canSeeThePlayer())
         {
@@ -305,7 +260,7 @@ public class EnemyAIBehavior : MonoBehaviour
         }
 
         agent.isStopped = true;
-        // Need to add that shoot rotation
+        rotateTowardsPlayer();
 
         shotTimer -= Time.deltaTime;
 
@@ -325,11 +280,13 @@ public class EnemyAIBehavior : MonoBehaviour
 
     void updateTeleportState()
     {
+        teleportTimer -= Time.deltaTime;
+
         if(teleportTimer <= 0f)
         {
             Teleport();
             shotsFired = 0;
-            changeState(EnemyState.Teleport);
+            changeState(EnemyState.Shoot);
         }
     }
 
@@ -339,7 +296,6 @@ public class EnemyAIBehavior : MonoBehaviour
         {
             case EnemyState.Shoot:
                 agent.isStopped = false;
-                shotsFired = 0;
                 break;
         }
 
@@ -351,20 +307,24 @@ public class EnemyAIBehavior : MonoBehaviour
                 agent.isStopped = false;
                 moveTowardsNextWaypoint();
                 break;
+
             case EnemyState.Chase:
                 agent.speed = chaseSpeed;
                 agent.stoppingDistance = playerReachingPoint;
                 agent.isStopped = false;
                 break;
+
             case EnemyState.Shoot:
                 agent.isStopped = true;
                 shotTimer = 0f;
                 break;
+
             case EnemyState.Teleport:
                 agent.isStopped = true;
                 teleportTimer = teleportDuration;
                 break;
         }
+        currentState = newState;
     }
 
         void Shoot()
@@ -385,13 +345,10 @@ public class EnemyAIBehavior : MonoBehaviour
         Vector3 directionToPlayer = (player.position - firePoint.position).normalized;
         bullet.transform.forward = directionToPlayer;
 
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        bullet.transform.forward = directionToPlayer;
-
         Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
         if (rbBullet != null)
         {
-            rbBullet.AddForce(directionToPlayer * bulletSpeed);
+            rbBullet.AddForce(directionToPlayer * bulletForce);
         }
         Debug.Log("Its shooting");
     }
@@ -399,7 +356,8 @@ public class EnemyAIBehavior : MonoBehaviour
     void rotateTowardsPlayer()
     {
         Vector3 direction = (player.position - transform.position).normalized;
-        //direction.y = 0;
+        direction.y = 0;
+
         if (direction != Vector3.zero) {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * buffer);
@@ -412,6 +370,7 @@ public class EnemyAIBehavior : MonoBehaviour
         if (newPosition == Vector3.zero)
         {
             Debug.Log("Couldn't find teleportation spot around player");
+            changeState(EnemyState.Shoot);
             return;
         }
 
@@ -431,7 +390,7 @@ public class EnemyAIBehavior : MonoBehaviour
 
         rotateTowardsPlayer();
 
-        teleportTimer = Time.time;
+        // teleportTimer = teleportDuration;
         Debug.Log("Enemy teleported to:" + newPosition);
     }
 
