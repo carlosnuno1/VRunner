@@ -20,7 +20,7 @@ public class ShootingEnemy : MonoBehaviour
     public Transform firePoint;
     public float bulletSpeed = 20f;
     public float attackCooldown = 1.5f;
-    public float shootingAngleThreshold = 0.98f;
+    public float shootingAngleThreshold = 0f;
     private float lastAttackTime;
 
     void Start()
