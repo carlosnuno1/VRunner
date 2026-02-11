@@ -69,7 +69,6 @@ public class EnemyAIBehavior : MonoBehaviour
     private float shotTimer = 0f;
     private float teleportTimer = 0f;
     private NavMeshAgent agent;
-    private bool isChasing = false;
     private int whatWaypointIsBroTravelingTo = 0;
     private float buffer = 2f;
 
