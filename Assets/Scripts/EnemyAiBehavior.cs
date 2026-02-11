@@ -147,6 +147,7 @@ public class EnemyAIBehavior : MonoBehaviour
         }
     }
 
+    /////// Patroling ///////
     void moveTowardsNextWaypoint()
     {
         if (waypoints.Length > 0 && agent != null && agent.isActiveAndEnabled)
@@ -173,16 +174,6 @@ public class EnemyAIBehavior : MonoBehaviour
 
     }
 
-    void startChasing()
-    {
-        isChasing = true;
-        agent.speed = chaseSpeed;
-        agent.stoppingDistance = playerReachingPoint;
-
-        chasingPlayer();
-
-    }
-
     void chasingPlayer()
     {
         if (agent.isActiveAndEnabled && player != null)
@@ -190,17 +181,6 @@ public class EnemyAIBehavior : MonoBehaviour
             agent.SetDestination(player.position);
             agent.stoppingDistance = playerReachingPoint;
             Debug.Log($"Player position: {player.position}");
-        }
-    }
-    void stopChasing()
-    {
-        isChasing = false;
-        agent.speed = patrolSpeed;
-        agent.stoppingDistance = waypointReachingPoint;
-
-        if (waypoints.Length > 0)
-        {
-            moveTowardsNextWaypoint();
         }
     }
 
@@ -216,7 +196,9 @@ public class EnemyAIBehavior : MonoBehaviour
 
     }
 
-        void updatePatrolState(float distanceToPlayer)
+
+    /////// State handling ///////
+    void updatePatrolState(float distanceToPlayer)
     {
         if (distanceToPlayer <= detectionRadius && canSeeThePlayer())
         {
@@ -328,7 +310,8 @@ public class EnemyAIBehavior : MonoBehaviour
         currentState = newState;
     }
 
-        void Shoot()
+    /////// Shooting ///////
+    void Shoot()
     {
         if (pewpewPrefab == null)
         {
@@ -365,6 +348,21 @@ public class EnemyAIBehavior : MonoBehaviour
         }
     }
 
+
+    // reffing the shooterPoint
+    void PointFireAtPlayer()
+    {
+        if (firePoint == null || player == null) return;
+
+        Vector3 direction = (player.position - firePoint.position).normalized;
+
+        if (direction == Vector3.forward)
+        {
+            firePoint.rotation = Quaternion.LookRotation(direction);
+        }
+    }
+
+    /////// Teleport ///////
     void Teleport()
     {
         Vector3 newPosition = FindTeleportPosition();
@@ -419,18 +417,5 @@ public class EnemyAIBehavior : MonoBehaviour
         }
 
         return Vector3.zero;
-    }
-
-    // reffing the shooterPoint
-    void PointFireAtPlayer()
-    {
-        if (firePoint == null || player == null) return;
-
-        Vector3 direction = (player.position - firePoint.position).normalized;
-        
-        if (direction == Vector3.forward)
-        {
-            firePoint.rotation = Quaternion.LookRotation(direction);
-        }
     }
 }
