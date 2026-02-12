@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 704587999596122300}
   - component: {fileID: 8776358816156156214}
   - component: {fileID: 3041062430913042465}
-  - component: {fileID: 8731976560231160664}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Projectile
@@ -140,15 +139,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &8731976560231160664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6305686143639336475}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b9caf2a968f32940a6c06c45b5f6c33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Bullet
