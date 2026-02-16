@@ -6,29 +6,26 @@ public class Bullet : MonoBehaviour
 
     void Start()
     {
-        Destroy(gameObject, lifetime);
+        Invoke(nameof(DestroyByLifetime), lifetime);
+    }
+
+    void DestroyByLifetime()
+    {
+        Debug.Log("Bullet destroyed: Lifetime");
+        Destroy(gameObject);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Player tag was hit");
+            Debug.Log("Bullet destroyed: Player");
             Destroy(gameObject);
-
-        } 
+        }
         else if (!other.CompareTag("Enemy") && !other.isTrigger)
         {
+            Debug.Log("Bullet destroyed: Environment");
             Destroy(gameObject);
         }
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("PLAYER HIT!");
-        }
-
-        Destroy(gameObject);
     }
 }

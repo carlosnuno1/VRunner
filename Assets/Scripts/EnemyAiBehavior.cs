@@ -4,11 +4,6 @@ using UnityEngine.AI;
 public class EnemyAIBehavior : MonoBehaviour
 {
 
-    // Goal:
-    /*
-    Enemy patrols between waypoints, shoots at player 3 times, teleport, loop then boom
-    */
-
     // Overall Plan:
     /*
     ----> Shoot three shots
@@ -20,11 +15,6 @@ public class EnemyAIBehavior : MonoBehaviour
     --> Maybe no kaboom??
     */
 
-    // Notes:
-    /*
-    Need improvements. enemy stops chasing so I gotta fix that. Aiming to finish by sat or sun
-    wire up shooting/teleporting
-    */
 
     public enum EnemyState
     {
@@ -55,14 +45,18 @@ public class EnemyAIBehavior : MonoBehaviour
     public float timeBetweenShots = 1f;
     public int shotCount = 3;
     public float shootingDistance = 8f;
-    public float bulletForce = 400f;
+    public float bulletForce = 40f;
+
+    [Header("Rotation")]
+    public float bodyRotationSpeed = 5f;
+    public float firePointRotationSpeed = 10f;
 
     [Header("Teleport")]
     public GameObject teleportVFX;
     public float teleportWithinPlayerRadius = 5f;
     public float minTeleportDistanceFromPlayer = 2f;
     public float teleportCooldown = 5f;
-    public float teleportDuration = 1f;
+    public float teleportDuration = 0.2f;
 
     private EnemyState currentState = EnemyState.Patrol;
     private int shotsFired = 0;
@@ -165,7 +159,7 @@ public class EnemyAIBehavior : MonoBehaviour
 
         if (distance < detectionRadius)
         {
-            Debug.Log("Player's cheeks are about to get clapped");
+            Debug.Log("Player Caught");
             return true;
         }
 
@@ -343,10 +337,9 @@ public class EnemyAIBehavior : MonoBehaviour
 
         if (direction != Vector3.zero) {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * buffer);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * bodyRotationSpeed);
         }
     }
-
 
     // reffing the shooterPoint
     void PointFireAtPlayer()
@@ -355,9 +348,10 @@ public class EnemyAIBehavior : MonoBehaviour
 
         Vector3 direction = (player.position - firePoint.position).normalized;
 
-        if (direction == Vector3.forward)
+        if (direction != Vector3.zero)
         {
-            firePoint.rotation = Quaternion.LookRotation(direction);
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * firePointRotationSpeed);
         }
     }
 
