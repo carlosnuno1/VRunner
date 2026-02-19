@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.InputSystem;
 
 public class Pistol : Gun  
@@ -10,9 +10,13 @@ public class Pistol : Gun
     public InputActionReference leftReloadButton;
     public InputActionReference rightReloadButton;
     public float recoilForce = 7;
+    public UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grab;
+    public GameObject holster;
+    public GameObject pistol;
+    
     private float triggerValue;
     private float reloadButtonValue;
-    public UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grab;
+    
 
     private void Awake()
     {
@@ -118,5 +122,10 @@ public class Pistol : Gun
                 rightReloadButton.action.Enable();
                 break;
         }
+    }
+
+    public void ReturnToHolster()
+    {
+        pistol.transform.position = holster.transform.position;
     }
 }

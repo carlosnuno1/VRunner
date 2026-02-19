@@ -13,6 +13,7 @@ public class WebShooter : MonoBehaviour
     public GameObject webEnd;
     public LineRenderer lineRenderer;
     public InputActionReference isPressed;
+    public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor interactor;
     
 
     [Header("Web Settings")]
@@ -28,6 +29,7 @@ public class WebShooter : MonoBehaviour
     private Vector3 webPoint;
     private float distanceFromPoint;
     private bool webShot;
+    private bool isHolding;
 
     private void Awake()
     {
@@ -42,14 +44,15 @@ public class WebShooter : MonoBehaviour
     private void HandleInput()
     {
         float triggerValue = isPressed.action.ReadValue<float>();
+        bool isHolding = (interactor as UnityEngine.XR.Interaction.Toolkit.Interactors.IXRSelectInteractor)?.hasSelection ?? false;
         Debug.Log("Trigger value: " + triggerValue);
 
-        if (triggerValue > 0 && !webShot)
+        if (triggerValue > 0 && !webShot && !isHolding)
         {
             webShot = true;
             ShootWeb();
         }
-        else if (triggerValue == 0 && webShot)
+        else if (triggerValue == 0 && webShot || isHolding)
         {
             webShot = false;
             StopWeb();

@@ -28,7 +28,7 @@
                     "name": "Attack",
                     "type": "Button",
                     "id": "6c2ab1b8-8984-453a-af3d-a3c78ae1679a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -37,7 +37,7 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "852140f2-7766-474d-8707-702459ba45f3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "Hold",
                     "initialStateCheck": false
@@ -145,6 +145,24 @@
                     "name": "Right Reload",
                     "type": "Button",
                     "id": "07979d50-7a71-43b5-9517-1f6f67f0f986",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "sim grip",
+                    "type": "Button",
+                    "id": "11d62bf0-f7b5-4634-8eb0-42053b141f5c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "sim trigger",
+                    "type": "Button",
+                    "id": "5724cd9b-5848-4fd9-bfd3-7e789d8994b6",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -611,6 +629,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Right Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b930d672-0741-414a-bd90-55a78f92552d",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "sim grip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "242e0b15-fa96-4096-b55e-7dc72f3d2770",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "sim trigger",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
