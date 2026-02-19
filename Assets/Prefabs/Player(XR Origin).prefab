@@ -530,6 +530,7 @@ MonoBehaviour:
   webEnd: {fileID: 6157395746319614033}
   lineRenderer: {fileID: 1824959029277563326}
   isPressed: {fileID: 0}
+  interactor: {fileID: 0}
   webStrength: 8.5
   webDamper: 7
   webMassScale: 4.5
@@ -661,7 +662,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4849652904116981557
 Transform:
   m_ObjectHideFlags: 0
@@ -961,6 +962,7 @@ MonoBehaviour:
   webEnd: {fileID: 8024644679145409076}
   lineRenderer: {fileID: 8525189223501422751}
   isPressed: {fileID: 0}
+  interactor: {fileID: 0}
   webStrength: 8.5
   webDamper: 7
   webMassScale: 4.5
@@ -1092,7 +1094,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3002586230133520398
 Transform:
   m_ObjectHideFlags: 0

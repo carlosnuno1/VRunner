@@ -24,12 +24,18 @@ public class WebShooter : MonoBehaviour
     public float maxDistance;
     public LayerMask webLayers;
 
+    [Header("Prediction")]
+    public RaycastHit predictionHit;
+    public float predictionSphereCastRadius;
+    public Transform predictionPoint;
+
     private SpringJoint joint;
     private FixedJoint endJoint;
     private Vector3 webPoint;
     private float distanceFromPoint;
     private bool webShot;
     private bool isHolding;
+    private Vector3 realHitPoint;
 
     private void Awake()
     {
@@ -59,12 +65,48 @@ public class WebShooter : MonoBehaviour
         }
     }
 
-    private void ShootWeb()
+    private void CheckForSwingPoints()
     {
-        RaycastHit hit;
-        if(Physics.Raycast(shooterTip.position, shooterTip.forward, out hit, maxDistance, webLayers))
+        if (joint != null) return;
+
+        RaycastHit sphereCastHit;
+        Physics.SphereCast(shooterTip.position, predictionSphereCastRadius, shooterTip.forward, out sphereCastHit, maxDistance, webLayers);
+        
+        RaycastHit raycastHit;
+        Physics.Raycast(shooterTip.position, shooterTip.forward, out raycastHit, maxDistance, webLayers);
+
+        if (raycastHit.point != Vector3. zero)
         {
-            webPoint = hit.point;
+            realHitPoint = raycastHit.point;
+        }
+        else if (sphereCastHit.point != Vector3.zero)
+        {
+            realHitPoint = sphereCastHit.point;
+        }
+        else
+        {
+            realHitPoint = Vector3.zero;
+        }
+
+        if(realHitPoint != Vector3.zero)
+        {
+            predictionPoint.gameObject.SetActive(true);
+            predictionPoint.position = realHitPoint;
+        }
+        else
+        {
+            predictionPoint.gameObject.SetActive(false);
+        }
+
+        predictionHit = raycastHit.point == Vector3.zero ? sphereCastHit : raycastHit;
+    }
+
+     void ShootWeb()
+    {
+        if(realHitPoint != Vector3.zero)
+        {
+            predictionPoint.gameObject.SetActive(false);
+            webPoint = predictionHit.point;
             webEnd.transform.position = webPoint;
 
             joint = player.gameObject.AddComponent<SpringJoint>();
@@ -93,6 +135,7 @@ public class WebShooter : MonoBehaviour
     private void Update()
     {
         HandleInput();
+        CheckForSwingPoints();
         if (webShot && joint)
         {
             lineRenderer.positionCount = 2;
