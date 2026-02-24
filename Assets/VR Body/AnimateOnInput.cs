@@ -7,21 +7,33 @@ using UnityEngine.InputSystem;
 public class AnimationInput
 {
     public string animationPropertyName;
-    public InputActionProperty action;
+    public InputAction action;
 }
 
 public class AnimateOnInput : MonoBehaviour
 {
     public List<AnimationInput> animationInputs;
     public Animator animator;
+    
+    void OnEnable()
+    {
+        foreach (var item in animationInputs)
+            item.action.Enable();
+    }
 
     // Update is called once per frame
     void Update()
     {
         foreach (var item in animationInputs)
         {
-            float actionValue = item.action.action.ReadValue<float>();
+            float actionValue = item.action.ReadValue<float>();
             animator.SetFloat(item.animationPropertyName, actionValue);
         }
+    }
+    
+    void OnDisable()
+    {
+        foreach (var item in animationInputs)
+            item.action.Disable();
     }
 }

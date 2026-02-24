@@ -12,9 +12,11 @@ public class WebShooter : MonoBehaviour
     public Rigidbody player;
     public GameObject webEnd;
     public LineRenderer lineRenderer;
-    public InputActionReference isPressed;
+    [SerializeField] private InputActionAsset actions;
     public UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor interactor;
+    public bool leftHand;
     
+    private InputAction trigger;
 
     [Header("Web Settings")]
     public float webStrength = 8.5f;
@@ -39,7 +41,14 @@ public class WebShooter : MonoBehaviour
 
     private void Awake()
     {
-        isPressed.action.Enable();
+        if (leftHand)
+        {
+            trigger = actions.FindAction("Player/Left Trigger", true);
+        } else
+        {
+            trigger = actions.FindAction("Player/Right Trigger", true);
+        }
+        trigger.Enable();
         InputSystem.onDeviceChange += OnDeviceChange;
         lineRenderer= GetComponent<LineRenderer>();
 
@@ -49,7 +58,7 @@ public class WebShooter : MonoBehaviour
 
     private void HandleInput()
     {
-        float triggerValue = isPressed.action.ReadValue<float>();
+        float triggerValue = trigger.ReadValue<float>();
         bool isHolding = (interactor as UnityEngine.XR.Interaction.Toolkit.Interactors.IXRSelectInteractor)?.hasSelection ?? false;
         Debug.Log("Trigger value: " + triggerValue);
 
@@ -149,10 +158,10 @@ public class WebShooter : MonoBehaviour
         switch (change)
         {
             case InputDeviceChange.Disconnected:
-                isPressed.action.Disable();
+                trigger.Disable();
                 break;
             case InputDeviceChange Reconnected:
-                isPressed.action.Enable();
+                trigger.Enable();
                 break;
         }
     }

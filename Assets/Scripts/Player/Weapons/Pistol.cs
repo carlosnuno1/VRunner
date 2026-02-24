@@ -7,8 +7,9 @@ using UnityEngine.InputSystem;
 
 public class Pistol : Gun  
 {
-    public InputActionReference leftReloadButton;
-    public InputActionReference rightReloadButton;
+    // public InputActionReference leftReloadButton;
+    // public InputActionReference rightReloadButton;
+    [SerializeField] private InputActionAsset actions;
     public float recoilForce = 7;
     public UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grab;
     public GameObject holster;
@@ -16,12 +17,17 @@ public class Pistol : Gun
     
     private float triggerValue;
     private float reloadButtonValue;
+
+    private InputAction leftReloadButton;
+    private InputAction rightReloadButton;
     
 
     private void Awake()
     {
-        leftReloadButton.action.Enable();
-        rightReloadButton.action.Enable();
+        leftReloadButton = actions.FindAction("Player/Left Reload", true);
+        rightReloadButton = actions.FindAction("Player/Right Reload", true);
+        leftReloadButton.Enable();
+        rightReloadButton.Enable();
         InputSystem.onDeviceChange += OnDeviceChange;
         InputSystem.onDeviceChange += OnDeviceChange;
     }
@@ -47,12 +53,12 @@ public class Pistol : Gun
 
         if (grabbingObject.CompareTag("Left Hand"))
         {
-            reloadButtonValue = leftReloadButton.action.ReadValue<float>();
+            reloadButtonValue = leftReloadButton.ReadValue<float>();
             Debug.Log("ReloadButton value: " + reloadButtonValue);
         } 
         else if (grabbingObject.CompareTag("Right Hand"))
         {
-            reloadButtonValue = rightReloadButton.action.ReadValue<float>();
+            reloadButtonValue = rightReloadButton.ReadValue<float>();
             Debug.Log("ReloadButton value: " + reloadButtonValue);
         }
 
@@ -114,12 +120,12 @@ public class Pistol : Gun
         switch (change)
         {
             case InputDeviceChange.Disconnected:
-                leftReloadButton.action.Disable();
-                rightReloadButton.action.Disable();
+                leftReloadButton.Disable();
+                rightReloadButton.Disable();
                 break;
             case InputDeviceChange Reconnected:
-                leftReloadButton.action.Enable();
-                rightReloadButton.action.Enable();
+                leftReloadButton.Enable();
+                rightReloadButton.Enable();
                 break;
         }
     }
