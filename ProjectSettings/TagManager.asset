@@ -8,6 +8,7 @@ TagManager:
   - Right Hand
   - Left Hand
   - Shockwave
+  - Climable
   layers:
   - Default
   - TransparentFX
