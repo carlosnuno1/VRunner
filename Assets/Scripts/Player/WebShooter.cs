@@ -76,6 +76,8 @@ public class WebShooter : MonoBehaviour
 
     private void CheckForSwingPoints()
     {
+        bool isHolding = (interactor as UnityEngine.XR.Interaction.Toolkit.Interactors.IXRSelectInteractor)?.hasSelection ?? false;
+        
         if (joint != null) return;
 
         RaycastHit sphereCastHit;
@@ -107,6 +109,10 @@ public class WebShooter : MonoBehaviour
             predictionPoint.gameObject.SetActive(false);
         }
 
+        if (isHolding)
+        {
+            predictionPoint.gameObject.SetActive(false);
+        }
         predictionHit = raycastHit.point == Vector3.zero ? sphereCastHit : raycastHit;
     }
 
