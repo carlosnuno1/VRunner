@@ -12,7 +12,15 @@ public class SpawnIntoSocket : MonoBehaviour
     [SerializeField] private bool matchSocketPose = true;
     [SerializeField] private bool disablePhysicsBeforeSocket = true;
     [SerializeField] private float waitTime = 2.0f;
+    public bool spawnPrefabOnStart;
 
+    public void Awake()
+    {
+        if(spawnPrefabOnStart)
+        {
+            SpawnAndInsert();
+        }
+    }
     public void SpawnAndInsert()
     {
         StartCoroutine(SpawnAndInsertRoutine());
