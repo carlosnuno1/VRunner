@@ -186,6 +186,9 @@ MonoBehaviour:
   grab: {fileID: 7525663284969889575}
   holster: {fileID: 0}
   pistol: {fileID: 790033244030126112}
+  damage: 20
+  ImpactParticleSystem: {fileID: 8465342995579122979, guid: facbe0e5aa37c93489788c2cd681da09, type: 3}
+  BulletTrail: {fileID: 4949474025643649410, guid: fd9d99c447ca52a4f9dc56d4695441a9, type: 3}
 --- !u!54 &3104601516829487604
 Rigidbody:
   m_ObjectHideFlags: 0

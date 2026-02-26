@@ -22,7 +22,7 @@ public class AK : AutomaticGun
     private InputAction leftReloadButton;
     private InputAction rightReloadButton;
 
-    [SerializeField] private ParticleSystem ShootingSystem;
+    // [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private ParticleSystem ImpactParticleSystem;
     [SerializeField] private TrailRenderer BulletTrail;
     
@@ -82,6 +82,8 @@ public class AK : AutomaticGun
         if(Physics.Raycast(gunTipTransform.position, gunTipTransform.forward, out hit, gunData.shootingRange, gunData.targetLayerMask))
         {
             TrailRenderer trail = Instantiate(BulletTrail, gunTipTransform.position, Quaternion.identity);
+            // ParticleSystem currentMuzzleFlash = Instantiate(muzzleFlash, gunTipTransform.position, Quaternion.identity);
+            // Destroy(currentMuzzleFlash, .5f);
             StartCoroutine(SpawnTrail(trail, hit));
             EnemyHealth enemy = hit.collider.GetComponent<EnemyHealth>();
             if (enemy != null)

@@ -258,10 +258,10 @@ MonoBehaviour:
   actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   recoilForce: 0.01
   grab: {fileID: 6965351790033797259}
-  holster: {fileID: 0}
+  holster: {fileID: 100006, guid: 30b4cc2728d8cec499fad63ba93785a4, type: 3}
   Self: {fileID: 4700570342795103460}
   damage: 10
-  ShootingSystem: {fileID: 0}
+  muzzleFlash: {fileID: 198234346748616026, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
   ImpactParticleSystem: {fileID: 8465342995579122979, guid: facbe0e5aa37c93489788c2cd681da09, type: 3}
   BulletTrail: {fileID: 4949474025643649410, guid: fd9d99c447ca52a4f9dc56d4695441a9, type: 3}
 --- !u!114 &6965351790033797259

@@ -14,12 +14,16 @@ public class Pistol : Gun
     public UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grab;
     public GameObject holster;
     public GameObject pistol;
+    public float damage = 20f;
     
     private float triggerValue;
     private float reloadButtonValue;
 
     private InputAction leftReloadButton;
     private InputAction rightReloadButton;
+
+    [SerializeField] private ParticleSystem ImpactParticleSystem;
+    [SerializeField] private TrailRenderer BulletTrail;
     
 
     private void Awake()
@@ -76,9 +80,37 @@ public class Pistol : Gun
         AddEffect();
         if(Physics.Raycast(gunTipTransform.position, gunTipTransform.forward, out hit, gunData.shootingRange, gunData.targetLayerMask))
         {
-            Debug.Log(gunData.gunName + " hit " + hit.collider.name);
+            TrailRenderer trail = Instantiate(BulletTrail, gunTipTransform.position, Quaternion.identity);
+            // ParticleSystem currentMuzzleFlash = Instantiate(muzzleFlash, gunTipTransform.position, Quaternion.identity);
+            // Destroy(currentMuzzleFlash, .5f);
+            StartCoroutine(SpawnTrail(trail, hit));
+            EnemyHealth enemy = hit.collider.GetComponent<EnemyHealth>();
+            if (enemy != null)
+            {
+                // Deal damage to the enemy
+                enemy.TakeDamage(damage);
+                Debug.Log("Enemy hit for " + damage + " damage.");
+            }        
         }
     }
+
+        private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
+    {
+        float time = 0;
+        Vector3 startPosition = Trail.transform.position;
+
+        while (time < 1)
+        {
+            Trail.transform.position = Vector3.Lerp(startPosition, Hit.point, time);
+            time += Time.deltaTime / Trail.time;
+
+            yield return null;
+        }
+        Trail.transform.position = Hit.point;
+        Instantiate(ImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
+        Destroy(Trail.gameObject,Trail.time);
+    }
+
 
     private void AddEffect()
     {
