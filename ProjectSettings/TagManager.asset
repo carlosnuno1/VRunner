@@ -5,19 +5,15 @@ TagManager:
   serializedVersion: 3
   tags:
   - Projectile
-  - Right Hand
-  - Left Hand
-  - Shockwave
-  - Climable
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - 
   - Water
   - UI
-  - Weapon
-  - Hands
+  - 
+  - 
   - 
   - 
   - 
