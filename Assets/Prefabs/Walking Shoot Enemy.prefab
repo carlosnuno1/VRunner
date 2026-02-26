@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 4814720886484876653}
   - component: {fileID: 3519673958287664857}
   - component: {fileID: 6948456830762571545}
+  - component: {fileID: 8407598194848590621}
   m_Layer: 0
   m_Name: Walking Shoot Enemy
   m_TagString: Untagged
@@ -219,3 +220,15 @@ MonoBehaviour:
   bulletSpeed: 20
   attackCooldown: 1.5
   shootingAngleThreshold: 0
+--- !u!114 &8407598194848590621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8705352896679173004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38ed6464698ebfc49895de19f92443b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'

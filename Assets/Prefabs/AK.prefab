@@ -55,13 +55,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6255923781686365657}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.09942, z: 0.01017}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.09942, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5363812990136718942}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &6737879312643163628
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +260,10 @@ MonoBehaviour:
   grab: {fileID: 6965351790033797259}
   holster: {fileID: 0}
   Self: {fileID: 4700570342795103460}
+  damage: 10
+  ShootingSystem: {fileID: 0}
+  ImpactParticleSystem: {fileID: 8465342995579122979, guid: facbe0e5aa37c93489788c2cd681da09, type: 3}
+  BulletTrail: {fileID: 4949474025643649410, guid: fd9d99c447ca52a4f9dc56d4695441a9, type: 3}
 --- !u!114 &6965351790033797259
 MonoBehaviour:
   m_ObjectHideFlags: 0
