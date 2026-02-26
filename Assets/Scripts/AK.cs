@@ -5,7 +5,7 @@ using System;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.InputSystem;
 
-public class Pistol : Gun  
+public class AK : AutomaticGun  
 {
     // public InputActionReference leftReloadButton;
     // public InputActionReference rightReloadButton;
@@ -13,7 +13,7 @@ public class Pistol : Gun
     public float recoilForce = 7;
     public UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grab;
     public GameObject holster;
-    public GameObject pistol;
+    public GameObject Self;
     
     private float triggerValue;
     private float reloadButtonValue;
@@ -82,38 +82,37 @@ public class Pistol : Gun
 
     private void AddEffect()
     {
-        var interactor = grab.firstInteractorSelecting;
-        if (interactor == null)
-        {
-            Debug.Log("interactor null");
-            return;
-        }
-        
-        var interactorComp = interactor as Component;
-        if (interactorComp == null)
-        {
-            Debug.Log("interactor as component null");
-            return;
-        }
+        var interactable = grab as UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable;
 
-        GameObject grabbingObject = interactorComp.gameObject;
+        if (interactable != null && interactable.interactorsSelecting.Count > 0)
+        {
+            // First hand recoil
+            var interactor1 = interactable.interactorsSelecting[0];
+            Transform attachPoint1 = interactor1.transform.Find("AttachPoint");
+            Rigidbody recoilPointrb1 = attachPoint1?.GetComponent<Rigidbody>();
+            if (recoilPointrb1 != null)
+            {
+                // Apply recoil force to first hand
+                recoilPointrb1.AddForce(-transform.forward * recoilForce, ForceMode.Impulse);
+                recoilPointrb1.transform.localRotation = Quaternion.AngleAxis(-10 * recoilForce, Vector3.right);
+            }
 
-        Transform attachPoint = grabbingObject.transform.Find("AttachPoint");
-        if (attachPoint != null)
-        {
-            Rigidbody recoilPointrb = attachPoint.GetComponent<Rigidbody>();
-            Debug.Log("adding recoil force");
-            recoilPointrb.AddForce(-transform.forward * recoilForce, ForceMode.Impulse);
-            recoilPointrb.transform.localRotation = Quaternion.AngleAxis(-10 * recoilForce, Vector3.right);
-        } 
-        else 
-        {
-            Debug.Log("attachpoint of child not found");
-            return;
+            if (interactable.interactorsSelecting.Count > 1)
+            {
+                // Second hand recoil (possibly with a smaller force or counteracting torque)
+                var interactor2 = interactable.interactorsSelecting[1];
+                Transform attachPoint2 = interactor2.transform.Find("AttachPoint");
+                Rigidbody recoilPointrb2 = attachPoint2?.GetComponent<Rigidbody>();
+                if (recoilPointrb2 != null)
+                {
+                    // Apply a smaller recoil force or counteracting torque to prevent flipping
+                    recoilPointrb2.AddForce(-transform.forward * recoilForce * 0.5f, ForceMode.Impulse);
+                    recoilPointrb2.transform.localRotation = Quaternion.AngleAxis(-5 * recoilForce, Vector3.right);
+                }
+            }
         }
-
-        
     }
+    
 
     private void OnDeviceChange(InputDevice device, InputDeviceChange change)
     {
@@ -132,10 +131,10 @@ public class Pistol : Gun
 
     public void ReturnToHolster()
     {
-        pistol.transform.position = holster.transform.position;
+        Self.transform.position = holster.transform.position;
     }
 
-    public void DestroyPistol()
+    public void DestroyAK()
     {
         StartCoroutine(DestroySelf());
     }
@@ -148,7 +147,7 @@ public class Pistol : Gun
 
         if (interactable == null || interactable.interactorsSelecting.Count <= 0)
         {
-            Destroy(pistol);
+            Destroy(Self);
             Debug.Log("Destorying ak");
         }
     }

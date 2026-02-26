@@ -40,7 +40,6 @@ public class ShockwaveGrenade : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
             
-            GetComponent<Renderer>().material.color = Color.red;
             Invoke(nameof(Explode), fuseDelay);
         }
     }

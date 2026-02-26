@@ -276,7 +276,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 692285449066080159}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -529,8 +529,9 @@ MonoBehaviour:
   player: {fileID: 6808513705185505349}
   webEnd: {fileID: 6157395746319614033}
   lineRenderer: {fileID: 1824959029277563326}
-  isPressed: {fileID: 0}
+  actions: {fileID: 0}
   interactor: {fileID: 0}
+  leftHand: 0
   webStrength: 8.5
   webDamper: 7
   webMassScale: 4.5
@@ -539,6 +540,8 @@ MonoBehaviour:
   webLayers:
     serializedVersion: 2
     m_Bits: 1
+  predictionSphereCastRadius: 0
+  predictionPoint: {fileID: 0}
 --- !u!120 &1824959029277563326
 LineRenderer:
   serializedVersion: 2
@@ -709,7 +712,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1397873113035313674}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -961,8 +964,9 @@ MonoBehaviour:
   player: {fileID: 6808513705185505349}
   webEnd: {fileID: 8024644679145409076}
   lineRenderer: {fileID: 8525189223501422751}
-  isPressed: {fileID: 0}
+  actions: {fileID: 0}
   interactor: {fileID: 0}
+  leftHand: 0
   webStrength: 8.5
   webDamper: 7
   webMassScale: 4.5
@@ -971,6 +975,8 @@ MonoBehaviour:
   webLayers:
     serializedVersion: 2
     m_Bits: 1
+  predictionSphereCastRadius: 0
+  predictionPoint: {fileID: 0}
 --- !u!120 &8525189223501422751
 LineRenderer:
   serializedVersion: 2
