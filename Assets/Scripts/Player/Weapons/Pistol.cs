@@ -15,6 +15,8 @@ public class Pistol : Gun
     public GameObject holster;
     public GameObject pistol;
     public float damage = 20f;
+    public AudioSource deagleAudioSource;
+    public AudioClip deagleShot;
     
     private float triggerValue;
     private float reloadButtonValue;
@@ -76,6 +78,7 @@ public class Pistol : Gun
 
     public override void Shoot()
     {
+        deagleAudioSource.PlayOneShot(deagleShot);
         RaycastHit hit;
         AddEffect();
         if(Physics.Raycast(gunTipTransform.position, gunTipTransform.forward, out hit, gunData.shootingRange, gunData.targetLayerMask))

@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - Projectile
+  - Enemy
+  - Left Hand
+  - Right Hand
+  - FxTemporaire
+  - Climable
   layers:
   - Default
   - TransparentFX

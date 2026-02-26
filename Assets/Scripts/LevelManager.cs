@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -8,12 +9,15 @@ public class LevelManager : MonoBehaviour
     public bool isTimerRunning = false;
     public bool playerInEndZone = false;
     public bool levelComplete = false;
+    public TextMeshProUGUI timerText;
+
 
     void Update()
     {
         if (isTimerRunning && !levelComplete)
         {
             timer += Time.deltaTime;
+            timerText.SetText("{0:F2}", timer);
         }
     }
 

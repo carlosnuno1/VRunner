@@ -3712,7 +3712,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5036457650248096104, guid: 886ae587d65051d4d8904f81c798c96b, type: 3}
       propertyPath: m_Name
-      value: Player(XR Origin) (1)
+      value: Player(XR Origin)
       objectReference: {fileID: 0}
     - target: {fileID: 5036457650248096104, guid: 886ae587d65051d4d8904f81c798c96b, type: 3}
       propertyPath: m_Layer
@@ -3740,7 +3740,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5785744784407531014, guid: 886ae587d65051d4d8904f81c798c96b, type: 3}
       propertyPath: m_Radius
-      value: 0.05
+      value: 0.065
       objectReference: {fileID: 0}
     - target: {fileID: 5785744784407531014, guid: 886ae587d65051d4d8904f81c798c96b, type: 3}
       propertyPath: m_Center.x

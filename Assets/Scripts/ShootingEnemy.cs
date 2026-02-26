@@ -21,6 +21,8 @@ public class ShootingEnemy : MonoBehaviour
     public float bulletSpeed = 20f;
     public float attackCooldown = 1.5f;
     public float shootingAngleThreshold = 0f;
+    public AudioSource EnemyAudioSource;
+    public AudioClip EnemyShootSound;
     private float lastAttackTime;
 
     void Start()
@@ -103,6 +105,7 @@ public class ShootingEnemy : MonoBehaviour
 
     void Shoot()
     {
+        EnemyAudioSource.PlayOneShot(EnemyShootSound);
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         Vector3 direction = (player.position - firePoint.position).normalized;

@@ -15,6 +15,8 @@ public class AK : AutomaticGun
     public GameObject holster;
     public GameObject Self;
     public float damage = 10f;
+    public AudioSource akAudioSource;
+    public AudioClip akSound;
     
     private float triggerValue;
     private float reloadButtonValue;
@@ -77,6 +79,7 @@ public class AK : AutomaticGun
 
     public override void Shoot()
     {
+        akAudioSource.PlayOneShot(akSound);
         RaycastHit hit;
         AddEffect();
         if(Physics.Raycast(gunTipTransform.position, gunTipTransform.forward, out hit, gunData.shootingRange, gunData.targetLayerMask))
