@@ -54,12 +54,12 @@ public class Pistol : Gun
         if (grabbingObject.CompareTag("Left Hand"))
         {
             reloadButtonValue = leftReloadButton.ReadValue<float>();
-            //Debug.Log("ReloadButton value: " + reloadButtonValue);
+            Debug.Log("ReloadButton value: " + reloadButtonValue);
         } 
         else if (grabbingObject.CompareTag("Right Hand"))
         {
             reloadButtonValue = rightReloadButton.ReadValue<float>();
-            //Debug.Log("ReloadButton value: " + reloadButtonValue);
+            Debug.Log("ReloadButton value: " + reloadButtonValue);
         }
 
         if (reloadButtonValue > 0 && grab.isSelected)
